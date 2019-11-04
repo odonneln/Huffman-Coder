@@ -27,6 +27,8 @@ int compress(char * infile, Node * tree, char * codefile, char * outfile)
 	long uncompressed_bytes = 0;
 	unsigned char byte = 0;
 	int bit = 0;
+    //long bytes_read = 0;
+    //long bytes_written = 0;
 	
 	if (tree != NULL) {
 		compressTree(tree, outptr, &byte, &bit);
@@ -43,7 +45,9 @@ int compress(char * infile, Node * tree, char * codefile, char * outfile)
 		uncompressed_bytes++;
 		findCode(figure, codebook);
 		do {
-			fread(&figure, sizeof(unsigned char), 1, codebook);
+			if (!fread(&figure, sizeof(unsigned char), 1, codebook)) {
+                fprintf(stderr, "fread() failure\n");
+            }
 			writeBit(figure, &byte, &bit, outptr);
 		} while (figure == '1' || figure == '0');
 		fseek(codebook, 0, SEEK_SET);
@@ -107,7 +111,9 @@ void compressTree(Node * head, FILE * outptr, unsigned char * byte, int * bit)
 		straddleByte(head->figure, *byte, bit, outptr);
 		//just wrote the straddle bytes, get the later one
 		fseek(outptr, -1, SEEK_CUR);
-		fread(byte, sizeof(*byte), 1, outptr);
+		if (!fread(byte, sizeof(*byte), 1, outptr)) {
+            fprintf(stderr, "fread() failure\n");
+        }
 		fseek(outptr, -1, SEEK_CUR);
 	}
 	return;
@@ -142,7 +148,9 @@ void findCode(unsigned char figure, FILE * fptr)
 		}
 	} while (buffer != figure);
 
-	fread(&buffer, sizeof(unsigned char), 1, fptr);
+	if (!fread(&buffer, sizeof(unsigned char), 1, fptr)) {
+        fprintf(stderr, "fread() failure\n");
+    }
 	if (buffer != ':') {
 		if (figure == '\n') {
 			fseek(fptr, -1, SEEK_CUR);
@@ -155,7 +163,9 @@ void findCode(unsigned char figure, FILE * fptr)
 		return;
 	}
 	if (figure == '\n') {
-		fread(&buffer, sizeof(unsigned char), 1, fptr);
+		if (!fread(&buffer, sizeof(unsigned char), 1, fptr)) {
+            fprintf(stderr, "fread() failure\n");
+        }
 		if (buffer == ':') {
 			findCode(figure, fptr);
 		} else {
