@@ -14,7 +14,7 @@ typedef struct node
 	long count;
 } Node;
 
-int count(char * infile, char * outfile);
+long * count(char * infile);
 int codebook(Node * head, char * outfile, int depth);
 int compress(char * infile, Node * tree, char * codebook, char * outfile);
 void findCode(unsigned char figure, FILE * codebook);
@@ -22,7 +22,7 @@ void compressTree(Node * tree, FILE * outptr, unsigned char * byte, int * bit);
 void writeBit(unsigned char figure, unsigned char * byte, int * bit, FILE * outptr);
 void straddleByte(unsigned char figure, unsigned char currentByte, 
 										int * bit, FILE * outptr);
-Node * tree_info(char* countfl, char* outf, int* depth); //returns whole tree
+Node * tree_info(long * count, char* outf, int* depth); //returns tree
 Node * createNode(unsigned char figure, long count);
 Node * ListInsert(Node * head, Node * newn);
 Node * constructTree(Node * listHead);

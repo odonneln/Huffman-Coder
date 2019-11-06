@@ -1,0 +1,15 @@
+ideas/tasks
+    - is "fseek(fptr, -1, SEEK_CUR)" eqvt to "fptr--" ??
+        - and is it faster
+    - does fread() move the fptr if it fails?
+    - if so, is there any reason to ftell() before comparing i == fptrOffset . sizeof(unsigned char)
+    - using ascii as i in do-while() -- make sure errors arent possible
+        from not checking condition before first iteration
+
+    - linked list part is O(n) for having it in order by frequency
+    - try this with a tree and see if its better
+        - would have to make a tree concurrently from inside tree #1
+
+    - if arrays past a certain size are slower than fwrite() and fread()
+        between functions then youre faggint it
+

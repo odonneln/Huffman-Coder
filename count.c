@@ -1,41 +1,51 @@
 #include "huffman.h"
 
-int count(char * infile, char * outfile)
+long * count(char * infile)
 {
 	FILE * fptr = fopen(infile, "r");
 	if (!fptr) {
 		fprintf(stderr, "unable to open input file to count()\n");
-		return EXIT_FAILURE;
+		return NULL;
 	}
+    /*
 	FILE * outptr = fopen(outfile, "w");
 	if (!outptr) {	
 		fprintf(stderr, "unable to open output file to count()\n");
 		fclose(fptr);
-		return EXIT_FAILURE;
+		return NULL;
 	}
-	//allocate temp array to store char counts
+    */
+	//allocate array to store char counts
 	long * arr = calloc(256, sizeof(long));
 	if (arr == NULL) {
 		fprintf(stderr, "calloc() fail\n");
 		fclose(fptr);
-		fclose(outptr);
-		return EXIT_FAILURE;
+		//fclose(outptr);
+		return NULL;
 	}
 
-	int i = 0; // may not need this counter
-		//could use it to check the whole file was read
+	int i = 0; // ensure whole file is read
 	unsigned char figure;
 	while (fread(&figure, sizeof(unsigned char), 1, fptr)) {
 		i++;
 		arr[figure]++;
 	}
-	
+
+    fseek(fptr, 0, SEEK_END);
+    if (i != ftell(fptr) / sizeof(char)) {
+        fprintf(stderr, "fread() failure in count()\n");
+        fclose(fptr);
+        free(arr);
+        return NULL;
+    }
+    
+    /*
 	//write char counts to output file
 	fwrite(arr, sizeof(long), 256, outptr);
-
-	fclose(fptr);
 	fclose(outptr);
-	free(arr);
+    */
+	fclose(fptr);
+	//free(arr);
 
-	return EXIT_SUCCESS;
+	return arr;
 }
