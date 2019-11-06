@@ -21,15 +21,15 @@ int main(int argc, char ** argv)
 		return EXIT_FAILURE;
 	}
 	int depth = 0;
-	Node * tree = tree_info(counts, argv[2], &depth);
+	Node * tree = getTree(counts, &depth);
 	if (tree == NULL && depth) {
 		return EXIT_FAILURE;
 	}
-	if (codebook(tree, argv[3], depth)) {
+	if (codebook(tree, argv[2], depth)) {
 		clearTree(tree);
 		return EXIT_FAILURE;
 	}
-    if (compress(argv[1], tree, argv[3], argv[4])) {
+    if (compress(argv[1], tree, argv[2], argv[3])) {
 		clearTree(tree);
 		return EXIT_FAILURE;
 	}

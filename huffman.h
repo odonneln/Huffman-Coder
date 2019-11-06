@@ -22,13 +22,13 @@ void compressTree(Node * tree, FILE * outptr, unsigned char * byte, int * bit);
 void writeBit(unsigned char figure, unsigned char * byte, int * bit, FILE * outptr);
 void straddleByte(unsigned char figure, unsigned char currentByte, 
 										int * bit, FILE * outptr);
-Node * tree_info(long * count, char* outf, int* depth); //returns tree
+Node * getTree(long * count, int* depth);
 Node * createNode(unsigned char figure, long count);
 Node * ListInsert(Node * head, Node * newn);
 Node * constructTree(Node * listHead);
 Node * mergeNodes(Node * left, Node * right);
 void printList(Node * head);
-void writeTopology(Node * head, FILE * outptr);
+//void writeTopology(Node * head, FILE * outptr);
 void writeCodes(Node * head, unsigned char * path, FILE * outptr);
 void writeLongs(FILE * outptr, long compressed_bytes, long tree_bytes, long uncompressed_bytes);
 void tell(FILE * fptr);
