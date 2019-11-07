@@ -52,6 +52,8 @@ int compress(char * infile, Node * tree, char * codefile, char * outfile)
 		} while (figure == '1' || figure == '0');
 		fseek(codebook, 0, SEEK_SET);
 	}
+    // test that none of hte fread in the outer while loop failed!
+    // ^^
 
 	if (tree != NULL && bit != 8) {
 		//demo this with a tree of size 1 etc.// this last byte is an assumption

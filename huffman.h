@@ -30,6 +30,9 @@ Node * mergeNodes(Node * left, Node * right);
 void printList(Node * head);
 //void writeTopology(Node * head, FILE * outptr);
 void writeCodes(Node * head, unsigned char * path, FILE * outptr);
+//
+char ** myWriteCodes(Node * head);
+//
 void writeLongs(FILE * outptr, long compressed_bytes, long tree_bytes, long uncompressed_bytes);
 void tell(FILE * fptr);
 void clearTree(Node * node);

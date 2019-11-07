@@ -12,4 +12,6 @@ ideas/tasks
 
     - if arrays past a certain size are slower than fwrite() and fread()
         between functions then youre faggint it
-
+    - with the whole linked list scheme for storing code path,
+        investigate what the next fields are left as after their initial use
+        - if they were set to NULL already, they may/may not have needed to be

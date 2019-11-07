@@ -33,6 +33,7 @@ int main(int argc, char ** argv)
 		clearTree(tree);
 		return EXIT_FAILURE;
 	}
+    free(counts);
 	clearTree(tree);
 	return EXIT_SUCCESS;
 }
