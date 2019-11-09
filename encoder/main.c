@@ -8,7 +8,7 @@
 int main(int argc, char ** argv)
 {
 	if (argc < 3) {
-		fprintf(stdout, "not enough inputs\n");
+		fprintf(stderr, "not enough inputs\n");
 		return EXIT_FAILURE;
 	}
 	// argv[1] = uncompressed input handle

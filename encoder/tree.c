@@ -2,26 +2,8 @@
 
 Node * getTree(long * counts, int * depth)
 {
-    /*
-	FILE * fptr = fopen(countfile, "r");
-	if (!fptr) {
-		fprintf(stderr, "unable to open count file in tree_info()");
-		*depth += 1; //indicates failure and not an empty list
-		return NULL;
-	}
-	FILE * outptr = fopen(outfile, "w");
-	if (!outptr) {
-		fprintf(stderr, "unable to open output file in tree_info()");
-		//fclose(fptr);
-		*depth += 1;
-		return NULL;
-	}
-    */
-
-	//long count;
 	Node * head = NULL;
 	Node * new = NULL;
-	//while (fread(&count, sizeof(long), 1, fptr)) {
 	unsigned char ascii = 0;
     do {
 		if (counts[ascii]) {
@@ -44,17 +26,10 @@ Node * getTree(long * counts, int * depth)
 	} while (ascii > 0);
 
 	if (head == NULL) {
-		//fclose(fptr);
-		//fclose(outptr);
 		return head; //file is empty -- print that its empy/do anything different?
 	} //add a similar one for files with some but not very many bytes
-
 	head = constructTree(head);
-	//writeTopology(head, outptr);
-	//fclose(fptr);
-	//fclose(outptr);
-
-	return head;
+    return head;
 }
 //-----------------------------------------------------------
 Node * constructTree(Node * head)

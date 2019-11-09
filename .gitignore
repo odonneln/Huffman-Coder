@@ -1,0 +1,6 @@
+# object files
+*.o
+# executable/output files
+*.out
+
+ideas.txt
