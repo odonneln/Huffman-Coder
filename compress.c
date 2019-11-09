@@ -1,22 +1,15 @@
 #include "huffman.h"
 
-int compress(char * infile, Node * tree, char * codefile, char * outfile)
+int compress(char * infile, Node * tree, unsigned char ** codes, char * outfile)
 {
 	FILE * fptr = fopen(infile, "r");
 	if (fptr == NULL) {
 		fprintf(stderr, "unable to open uncompressed input in compress()\n");
 		return EXIT_FAILURE;
 	}
-	FILE * codebook = fopen(codefile, "r");
-	if (codebook == NULL) {
-		fprintf(stderr, "unable to open character codes file in compress()\n");
-		fclose(fptr);
-		return EXIT_FAILURE;
-	}
 	FILE * outptr = fopen(outfile, "w+");
 	if (outptr == NULL) {
 		fprintf(stderr, "unable to open output file in compress()\n");
-		fclose(codebook);
 		fclose(fptr);
 		return EXIT_SUCCESS;
 	}
@@ -40,9 +33,15 @@ int compress(char * infile, Node * tree, char * codefile, char * outfile)
 	byte = 0;
 	bit = 0;
 	unsigned char figure; //buffer for chars and their code bits
+    int i;
+    
+    int j = 0;
+
 	while (fread(&figure, sizeof(unsigned char), 1, fptr))
 	{
+        j++;
 		uncompressed_bytes++;
+        /*
 		findCode(figure, codebook);
 		do {
 			if (!fread(&figure, sizeof(unsigned char), 1, codebook)) {
@@ -51,6 +50,11 @@ int compress(char * infile, Node * tree, char * codefile, char * outfile)
 			writeBit(figure, &byte, &bit, outptr);
 		} while (figure == '1' || figure == '0');
 		fseek(codebook, 0, SEEK_SET);
+        */
+        for (i = 0; i < codes[figure][0]; i++) {
+            //
+            writeBit(codes[figure][i+1], &byte, &bit, outptr);
+        }
 	}
     // test that none of hte fread in the outer while loop failed!
     // ^^
@@ -63,7 +67,6 @@ int compress(char * infile, Node * tree, char * codefile, char * outfile)
 	writeLongs(outptr, compressed_bytes, tree_bytes, uncompressed_bytes);
 
 	fclose(fptr);
-	fclose(codebook);
 	fclose(outptr);
 
 	return EXIT_SUCCESS;

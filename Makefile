@@ -15,48 +15,42 @@ $(TARGET): $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 val_gophers:
-	$(VALGRIND) ./encode test_files/original/gophers code.out compressed.out
+	$(VALGRIND) ./encode test_files/original/gophers compressed.out
 val_empty:
-	$(VALGRIND) ./encode test_files/original/empty code.out compressed.out
+	$(VALGRIND) ./encode test_files/original/empty compressed.out
 val_lorum:
-	$(VALGRIND) ./encode test_files/original/lorum code.out compressed.out
+	$(VALGRIND) ./encode test_files/original/lorum compressed.out
 val_binary:
-	$(VALGRIND) ./encode test_files/original/binary1 code.out compressed.out
+	$(VALGRIND) ./encode test_files/original/binary1 compressed.out
 val_stone:
-	$(VALGRIND) ./encode test_files/original/stone code.out compressed.out
+	$(VALGRIND) ./encode test_files/original/stone compressed.out
 val_woods:
-	$(VALGRIND)	./encode test_files/original/woods code.out compressed.out
+	$(VALGRIND)	./encode test_files/original/woods compressed.out
 
 test: gophers lorum stone woods binary empty
 
 binary:
-	./encode test_files/original/binary1 code.out compressed.out
-	diff code.out test_files/code/binary1.code
+	./encode test_files/original/binary1 compressed.out
 	diff compressed.out test_files/compressed/binary1.hbt
 
 empty:
-	./encode test_files/original/empty code.out compressed.out
-	diff code.out test_files/code/empty.code
+	./encode test_files/original/empty compressed.out
 	diff compressed.out test_files/compressed/empty.hbt
 
 gophers:
-	./encode test_files/original/gophers code.out compressed.out
-	diff code.out test_files/code/gophers.code
+	./encode test_files/original/gophers compressed.out
 	diff compressed.out test_files/compressed/gophers.hbt
 
 lorum:
-	./encode test_files/original/lorum code.out compressed.out
-	diff code.out test_files/code/lorum.code
+	./encode test_files/original/lorum compressed.out
 	diff compressed.out test_files/compressed/lorum.hbt
 	
 stone:
-	./encode test_files/original/stone code.out compressed.out
-	diff code.out test_files/code/stone.code
+	./encode test_files/original/stone compressed.out
 	diff compressed.out test_files/compressed/stone.hbt
 	
 woods:
-	./encode test_files/original/woods code.out compressed.out
-	diff code.out test_files/code/woods.code
+	./encode test_files/original/woods compressed.out
 	diff compressed.out test_files/compressed/woods.hbt
 aaa:
 	$(VALGRIND) ./encode test_cases/aaa a.out b.out c.out d.out

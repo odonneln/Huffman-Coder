@@ -1,47 +1,23 @@
 #include "huffman.h"
 
-int codebook(Node * head, char * outfile, int depth)
+unsigned char ** codebook(Node * head, int depth)
 {
-    FILE * fptr = fopen(outfile, "w");
-    if (fptr == NULL) {
-        fprintf(stderr, "unable to open output file in writeCodes()\n");
-        return EXIT_FAILURE;
-    }
     if (head == NULL) {
-        fclose(fptr);
-        return EXIT_SUCCESS;
+        return NULL;
     }
-    unsigned char * path = malloc(depth * sizeof(unsigned char));
-    if (path == NULL) {
-        fprintf(stderr, "malloc fail in codebook()\n");
-        fclose(fptr);
-        return EXIT_FAILURE;
-    }
-    path[0] = 1; // pointer to the next available array cell
+    unsigned char ** book = writeCodes(head);
+    //test for NULL ?
 
-    char ** book = myWriteCodes(head);
-    for (int i = 0; i < 256; i++) {
-        if (book[i]) {
-            free(book[i]);
-        }
-    }
-    free(book);
-
-    writeCodes(head, path, fptr);
-
-    free(path);
-    fclose(fptr);
-
-    return EXIT_SUCCESS;
+    return book;
 }
 
-char ** myWriteCodes(Node * head) {
+unsigned char ** writeCodes(Node * head) {
     //instead of writing to a file
     //write to an ARRAY OF STRINGS/char arrays
         //would an array of another type work? BITS?
         //how long will a 256 ascii code even get?
         //not more than eight 0's,1's
-    char ** book = calloc(256, sizeof(char*));
+    unsigned char ** book = calloc(256, sizeof(unsigned char*));
     //char ** book = calloc(256 * sizeof(char*)); //only calloc() for printing
     Node * path = head;
     path->next = NULL; //already by NULL by previous ops but to be safe
@@ -59,8 +35,9 @@ char ** myWriteCodes(Node * head) {
             depth++;
         }
         else {
-            if (path->figure) {
-                book[path->figure] = malloc((depth + 1) * sizeof(char));
+            if (path->figure || (!path->left && !path->right && !path->figure)) {
+            //if (path->figure) {
+                book[path->figure] = malloc((depth + 1) * sizeof(unsigned char));
                 book[path->figure][0] = depth;
                 temp = path;
                 int i = 0;
@@ -94,18 +71,27 @@ char ** myWriteCodes(Node * head) {
     return book;
 }
 
-void writeCodes(Node * head, unsigned char * path, FILE * outptr)
+void freeCodebook(unsigned char ** book) {
+    for (int i = 0; i < 256; i++) {
+        if (book[i]) {
+            free(book[i]);
+        }
+    }
+    free(book);
+}
+
+void writeCodes_old(Node * head, unsigned char * path, FILE * outptr)
 {
     if (head->left != NULL) {
         path[path[0]] = '0';
         path[0]++;
-        writeCodes(head->left, path, outptr);
+        writeCodes_old(head->left, path, outptr);
         path[0]--;
     }
     if (head->right != NULL) {
         path[path[0]] = '1';
         path[0]++;
-        writeCodes(head->right, path, outptr);
+        writeCodes_old(head->right, path, outptr);
         path[0]--;
     }
     else {

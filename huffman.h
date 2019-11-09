@@ -15,8 +15,8 @@ typedef struct node
 } Node;
 
 long * count(char * infile);
-int codebook(Node * head, char * outfile, int depth);
-int compress(char * infile, Node * tree, char * codebook, char * outfile);
+unsigned char ** codebook(Node * head, int depth);
+int compress(char * infile, Node * tree, unsigned char ** codebook, char * outfile);
 void findCode(unsigned char figure, FILE * codebook);
 void compressTree(Node * tree, FILE * outptr, unsigned char * byte, int * bit);
 void writeBit(unsigned char figure, unsigned char * byte, int * bit, FILE * outptr);
@@ -29,9 +29,8 @@ Node * constructTree(Node * listHead);
 Node * mergeNodes(Node * left, Node * right);
 void printList(Node * head);
 //void writeTopology(Node * head, FILE * outptr);
-void writeCodes(Node * head, unsigned char * path, FILE * outptr);
-//
-char ** myWriteCodes(Node * head);
+void writeCodes_old(Node * head, unsigned char * path, FILE * outptr);
+unsigned char ** writeCodes(Node * head);
 //
 void writeLongs(FILE * outptr, long compressed_bytes, long tree_bytes, long uncompressed_bytes);
 void tell(FILE * fptr);

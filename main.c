@@ -7,14 +7,12 @@
 
 int main(int argc, char ** argv)
 {
-	if (argc < 4) {
+	if (argc < 3) {
 		fprintf(stdout, "not enough inputs\n");
 		return EXIT_FAILURE;
 	}
-	// argv[1] = uncompressed input file
-	// argv[2] = tree info (charactar based)
-	// argv[3] = codes
-	// argv[4] = compressed output
+	// argv[1] = uncompressed input handle
+	// argv[2] = compressed output destination
     
     long * counts = count(argv[1]);
 	if (counts == NULL) {
@@ -25,11 +23,12 @@ int main(int argc, char ** argv)
 	if (tree == NULL && depth) {
 		return EXIT_FAILURE;
 	}
-	if (codebook(tree, argv[2], depth)) {
-		clearTree(tree);
+    unsigned char ** book = codebook(tree, depth);
+    if (book == NULL && depth) {
+        clearTree(tree);
 		return EXIT_FAILURE;
 	}
-    if (compress(argv[1], tree, argv[2], argv[3])) {
+    if (compress(argv[1], tree, book, argv[2])) {
 		clearTree(tree);
 		return EXIT_FAILURE;
 	}
