@@ -2,7 +2,7 @@ TARGET = decode
 #GCC = gcc -O3 -std=c99 -Wall -Wshadow -Wvla -pedantic
 GCC = gcc -g -std=c99 -Wall -Wshadow -Wvla -pedantic
 
-SRCS = main.c tree.c read.c
+SRCS = main.c tree.c read.c utility.c
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -27,14 +27,17 @@ val_stone:
 val_woods:
 	$(VALGRIND)	./decode ../test_files/compressed/woods.hbt decompressed.out
 
+val_tree:
+	$(VALGRIND) ./decode ../test_files/compressed/gophers.hbt tree.out
+
 tree:
-	./decode ../test_files/tree/gophers.tree tree.out
+	./decode ../test_files/compressed/gophers.hbt tree.out
 	diff tree.out ../test_files/tree/gophers.tree
-	./decode ../test_files/tree/stone.tree tree.out
+	./decode ../test_files/compressed/stone.hbt tree.out
 	diff tree.out ../test_files/tree/stone.tree
-	./decode ../test_files/tree/lorum.tree tree.out
+	./decode ../test_files/compressed/lorum.hbt tree.out
 	diff tree.out ../test_files/tree/lorum.tree
-	./decode ../test_files/tree/binary1.tree tree.out
+	./decode ../test_files/compressed/binary1.hbt tree.out
 	diff tree.out ../test_files/tree/binary1.tree
 
 test: gophers lorum stone woods binary empty

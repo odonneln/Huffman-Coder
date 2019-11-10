@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-void printBinary(unsigned char);
+#include "huffman.h"
 
 unsigned char getBit(FILE * fptr, unsigned char * byte, int * digit, long * bytes_read)
 {
@@ -46,13 +45,4 @@ int readByteCounts(FILE * fptr, long * compressed_ct, long * tree_ct, long * unc
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
-}
-
-void printBinary(unsigned char byte) {
-    unsigned char figure = 128;
-    for (int i = 0; i < 8; i++) {
-        printf("%d", (figure & byte) > 0);
-        figure >>= 1;
-    }
-    printf("\n");
 }

@@ -28,6 +28,12 @@ int main(int argc, char ** argv)
         return EXIT_FAILURE;
     }
     Node * tree = rebuildTree(inptr, tree_bytes);
+    //check if null
+
+    //print tree
+    writeTopology(tree, outptr);
+    
+    clearTree(tree);
 
     fclose(inptr);
     fclose(outptr);
