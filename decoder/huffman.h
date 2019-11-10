@@ -12,6 +12,8 @@ typedef struct node
     unsigned char figure;
 } Node;
 
+unsigned char getBit(FILE * fptr, unsigned char * byte, int * digit, long * bytes_read);
+unsigned char getChar(FILE * fptr, unsigned char * byte, int * digit, long * bytes_read);
 int readByteCounts(FILE * fptr, long * compressed, long * tree, long * uncompressed);
-Node * rebuildTree(FILE * fptr);
+Node * rebuildTree(FILE * fptr, long tree_bytes);
 Node * createNode(unsigned char figure);

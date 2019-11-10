@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "decode.h"
+#include "huffman.h"
 
 void writeTopology(Node * head, FILE * outptr);
 int main(int argc, char ** argv)
@@ -20,7 +20,6 @@ int main(int argc, char ** argv)
         fclose(inptr);
         return EXIT_FAILURE;
     }
-    /*
     long compressed_bytes;
     long tree_bytes;
     long uncompressed_bytes;
@@ -28,25 +27,9 @@ int main(int argc, char ** argv)
         fclose(inptr);
         return EXIT_FAILURE;
     }
-    */
-
-    Node * tree = rebuildTree(inptr);
-    writeTopology(tree, outptr);
+    Node * tree = rebuildTree(inptr, tree_bytes);
 
     fclose(inptr);
     fclose(outptr);
     return EXIT_SUCCESS;
-}
-
-// ONLY FOR TESTING PURPOSES
-void writeTopology(Node * head, FILE * outptr) {
-	if (head->left != NULL) {
-		fwrite("0", sizeof(unsigned char), 1, outptr);
-		writeTopology(head->left, outptr);
-		writeTopology(head->right, outptr);
-	} else {
-		fwrite("1", sizeof(unsigned char), 1, outptr);
-		fwrite(&head->figure, sizeof(unsigned char), 1, outptr);
-	}
-	return;
 }

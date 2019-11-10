@@ -1,27 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "decode.h"
+#include "huffman.h"
 
-Node * rebuildTree(FILE * fptr)
+Node * rebuildTree(FILE * fptr, long tree_bytes)
 {
-    /*
     unsigned char byte;
-    unsigned char bit;
-    int digit; //matters for later when actually reading .hbt
-    */
-    unsigned char figure;
-    Node * root;
-    fread(&figure, sizeof(unsigned char), 1, fptr);
-    if (figure == '0') {
-        root = createNode('\0');
-    } else {
-        fprintf(stderr, "unexpected first bit value in tree builder\n");
+    //unsigned char bit = 0;
+    int digit = 0;
+    long bytes_read = 0;
+
+    if (getBit(fptr, &byte, &digit, &bytes_read)) {
+        fprintf(stderr, "unrecognized format-- first bit of .hbt should be 0\n");
         return NULL;
     }
+
+    unsigned char figure;
+    Node * root = createNode('\0');
     Node * stack = root;
     Node * temp;
-    while (fread(&figure, sizeof(unsigned char), 1, fptr) && stack) {
-        if (figure == '0') {
+    int i = 0;
+    while (stack) {
+
+        if (getBit(fptr, &byte, &digit, &bytes_read)) {
+            figure = getChar(fptr, &byte, &digit, &bytes_read);
+            
+            //
+            printf("got figure : %c\n", figure);
+            i++; 
+            if (i > 10) { stack = NULL; }
+            //
+
+            temp = createNode(figure);
+            if (stack->left == NULL) {
+                stack->left = temp;
+            } else {
+                stack->right = temp;
+                stack = stack->next;
+            }
+        } else {
             temp = createNode('\0');
             if (stack->left == NULL) {
                 stack->left = temp;
@@ -32,25 +48,19 @@ Node * rebuildTree(FILE * fptr)
             }
             stack = temp;
         }
-        else if (figure == '1') {
-            if (!fread(&figure, sizeof(unsigned char), 1, fptr)) {
-                fprintf(stderr, "unexpected--no char after cmd bit == 1\n");
-            }
-            temp = createNode(figure);
-            if (stack->left == NULL) {
-                stack->left = temp;
-            } else {
-                stack->right = temp;
-                stack = stack->next;
-            }
-        }
-        else {
-            fprintf(stderr, "unexpected charactar\n");
+        if (figure == 'r') {
+            break;
         }
     }
+
+    // make catches better than this
     if (stack != NULL) {
         printf("stack is not null after loop creating tree\n");
     }
+
+    printf("bytes read recorded as : %ld\n", bytes_read);
+    printf("ftell() at end = %ld", ftell(fptr));
+
     return root;
 }
 
