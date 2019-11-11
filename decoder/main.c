@@ -20,7 +20,7 @@ int main(int argc, char ** argv)
         return EXIT_FAILURE;
     }
     Node * tree = rebuildTree(inptr, tree_bytes);
-    if (tree == NULL) {
+    if (tree == NULL && tree_bytes) {
         fclose(inptr);
         return EXIT_FAILURE;
     }

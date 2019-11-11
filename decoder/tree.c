@@ -4,6 +4,9 @@
 
 Node * rebuildTree(FILE * fptr, long tree_bytes)
 {
+    if (!tree_bytes) {
+        return NULL;
+    }
     long bytes_read = 0;
     unsigned char byte;
     int digit = 8; //gets modded to 0 in getBit(), has to be 8 so next byte is read
@@ -21,8 +24,8 @@ Node * rebuildTree(FILE * fptr, long tree_bytes)
             figure = getChar(fptr, &byte, &digit, &bytes_read);
             temp = createNode(figure);
             if (temp == NULL) {
-                //make malloc fail on leaf node
-                // clear tree or clear stack??
+                clearTree(root);
+                return NULL;
             }
             if (stack->left == NULL) {
                 stack->left = temp;
@@ -33,8 +36,8 @@ Node * rebuildTree(FILE * fptr, long tree_bytes)
         } else {
             temp = createNode('\0');
             if (temp == NULL) {
-                //make malloc fail on non leaf node
-                // clear tree or clear stack??
+                clearTree(root);
+                return NULL;
             }
             if (stack->left == NULL) {
                 stack->left = temp;
@@ -46,15 +49,20 @@ Node * rebuildTree(FILE * fptr, long tree_bytes)
             stack = temp;
         }
     }
-    /*
-        add in catches here -- remaining stack?
-    */
+    if (stack != NULL) {
+        fprintf(stderr, "unrecognied hbt structure\n");
+        while (stack != NULL) {
+            temp = stack;
+            stack = stack->next;
+            free(temp);
+        }
+        return NULL;
+    }
     if (bytes_read != tree_bytes) {
         fprintf(stderr, "unexpected input format\n");
         clearTree(root);
         return NULL;
     }
-    
     return root;
 }
 
@@ -62,6 +70,7 @@ Node * createNode(unsigned char figure)
 {
     Node * node = malloc(sizeof(Node));
     if (node == NULL) {
+        fprintf(stderr, "malloc() fail\n");
         return NULL;
     }
     node->figure = figure;
