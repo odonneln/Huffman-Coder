@@ -30,18 +30,23 @@ unsigned char getChar(FILE * fptr, unsigned char * byte, int * digit, long * byt
     return figure;
 }
 
-int readByteCounts(FILE * fptr, long * compressed_ct, long * tree_ct, long * uncompressed_ct)
+int readByteCounts(FILE * fptr, long * tree_ct, long * uncompressed_ct)
 {
-    if (!fread(compressed_ct, sizeof(long), 1, fptr)) {
+    long compressed_ct;
+    if (!fread(&compressed_ct, sizeof(long), 1, fptr)) {
         return EXIT_FAILURE;
     }
-    if (!fread(tree_ct, sizeof(long), 1, fptr)) {
+    fseek(fptr, 0, SEEK_END);
+    if (ftell(fptr) != compressed_ct) {
+        fprintf(stderr, "ERROR: input file length does not match file header\n");
         return EXIT_FAILURE;
     }
-    if (!fread(uncompressed_ct, sizeof(long), 1, fptr)) {
-        return EXIT_FAILURE;
-    }
-    if (ftell(fptr) != 3 * sizeof(long)) {
+    fseek(fptr, sizeof(long), SEEK_SET);
+    if (
+            !fread(tree_ct, sizeof(long), 1, fptr) || 
+            !fread(uncompressed_ct, sizeof(long), 1, fptr) ||
+            ftell(fptr) != 3 * sizeof(long)
+       ) {
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

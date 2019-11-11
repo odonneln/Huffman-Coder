@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "huffman.h"
 
-void writeTopology(Node * head, FILE * outptr);
 int main(int argc, char ** argv)
 {
     if (argc < 3) {
@@ -14,28 +13,26 @@ int main(int argc, char ** argv)
         fprintf(stderr, "unable to open input file\n");
         return EXIT_FAILURE;
     }
-    FILE * outptr = fopen(argv[2], "w");
-    if (outptr == NULL) {
-        fprintf(stderr, "unable to open output file\n");
-        fclose(inptr);
-        return EXIT_FAILURE;
-    }
-    long compressed_bytes;
     long tree_bytes;
     long uncompressed_bytes;
-    if (readByteCounts(inptr, &compressed_bytes, &tree_bytes, &uncompressed_bytes)) {
+    if (readByteCounts(inptr, &tree_bytes, &uncompressed_bytes)) {
         fclose(inptr);
         return EXIT_FAILURE;
     }
     Node * tree = rebuildTree(inptr, tree_bytes);
-    //check if null
+    if (tree == NULL) {
+        fclose(inptr);
+        return EXIT_FAILURE;
+    }
+    if (decompress(inptr, argv[2], tree, uncompressed_bytes)) {
+        clearTree(tree);
+        fclose(inptr);
+        return EXIT_FAILURE;
+    }
+    //catches for 3 bytes at the beginning of .hbt
+    //especially uncompressed_bytes
 
-    //print tree
-    writeTopology(tree, outptr);
-    
     clearTree(tree);
-
     fclose(inptr);
-    fclose(outptr);
     return EXIT_SUCCESS;
 }

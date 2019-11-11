@@ -2,7 +2,7 @@ TARGET = decode
 #GCC = gcc -O3 -std=c99 -Wall -Wshadow -Wvla -pedantic
 GCC = gcc -g -std=c99 -Wall -Wshadow -Wvla -pedantic
 
-SRCS = main.c tree.c read.c utility.c
+SRCS = main.c tree.c decompress.c read.c utility.c
 
 OBJS = $(SRCS:%.c=%.o)
 

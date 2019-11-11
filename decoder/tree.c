@@ -4,9 +4,9 @@
 
 Node * rebuildTree(FILE * fptr, long tree_bytes)
 {
+    long bytes_read = 0;
     unsigned char byte;
     int digit = 8; //gets modded to 0 in getBit(), has to be 8 so next byte is read
-    long bytes_read = 0;
 
     if (getBit(fptr, &byte, &digit, &bytes_read)) {
         fprintf(stderr, "unrecognized format-- first bit of .hbt should be 0\n");
@@ -18,10 +18,12 @@ Node * rebuildTree(FILE * fptr, long tree_bytes)
     Node * temp;
     while (stack) {
         if (getBit(fptr, &byte, &digit, &bytes_read)) {
-
             figure = getChar(fptr, &byte, &digit, &bytes_read);
-
             temp = createNode(figure);
+            if (temp == NULL) {
+                //make malloc fail on leaf node
+                // clear tree or clear stack??
+            }
             if (stack->left == NULL) {
                 stack->left = temp;
             } else {
@@ -30,6 +32,10 @@ Node * rebuildTree(FILE * fptr, long tree_bytes)
             }
         } else {
             temp = createNode('\0');
+            if (temp == NULL) {
+                //make malloc fail on non leaf node
+                // clear tree or clear stack??
+            }
             if (stack->left == NULL) {
                 stack->left = temp;
                 temp->next = stack;
@@ -41,29 +47,23 @@ Node * rebuildTree(FILE * fptr, long tree_bytes)
         }
     }
     /*
-    if (stack) {
-        printf("\tstack = %p\n", (void*)stack);
-    } else {
-        printf("stack is NULL\n");
-    }
+        add in catches here -- remaining stack?
     */
-    // make catches better than this
-    /*
-    if (stack != NULL) {
-        //printf("stack is not null after loop creating tree\n");
-        printf("stack %p -> %u\n", stack, stack->figure);
-        stack = stack->next;
+    if (bytes_read != tree_bytes) {
+        fprintf(stderr, "unexpected input format\n");
+        clearTree(root);
+        return NULL;
     }
-
-    printf("bytes read recorded as : %ld\n", bytes_read);
-    printf("ftell() at end = %ld\n", ftell(fptr));
-    */
+    
     return root;
 }
 
 Node * createNode(unsigned char figure)
 {
     Node * node = malloc(sizeof(Node));
+    if (node == NULL) {
+        return NULL;
+    }
     node->figure = figure;
     node->right = node->left = node->next = NULL;
     return node;
